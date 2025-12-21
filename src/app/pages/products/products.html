@@ -1,0 +1,49 @@
+<h1 class="text-3xl font-bold mb-6">Productos</h1>
+
+<!-- Categorías -->
+<div class="flex gap-3 mb-6 flex-wrap">
+  <button
+    (click)="filterByCategory(null)"
+    class="px-4 py-2 rounded border"
+    [class.bg-blue-600]="!selectedCategory"
+    [class.text-white]="!selectedCategory"
+  >
+    Todos
+  </button>
+
+  <button
+    *ngFor="let category of categories"
+    (click)="filterByCategory(category)"
+    class="px-4 py-2 rounded border"
+    [class.bg-blue-600]="selectedCategory === category"
+    [class.text-white]="selectedCategory === category"
+  >
+    {{ category }}
+  </button>
+</div>
+
+<!-- Productos -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+  <div
+    *ngFor="let product of products"
+    class="border rounded-lg shadow-sm p-4 flex flex-col"
+  >
+    <img
+      [src]="product.imageUrl"
+      class="w-full h-48 object-cover rounded mb-4"
+    />
+
+    <h2 class="font-semibold text-lg">{{ product.name }}</h2>
+    <p class="text-gray-600 text-sm mb-2">{{ product.description }}</p>
+
+    <div class="mt-auto">
+      <p class="text-xl font-bold">Bs {{ product.price }}</p>
+      <p class="text-sm text-green-600" *ngIf="product.stock > 0">
+        Stock disponible
+      </p>
+      <p class="text-sm text-red-600" *ngIf="product.stock === 0">
+        Sin stock
+      </p>
+    </div>
+  </div>
+</div>
