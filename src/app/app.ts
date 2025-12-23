@@ -17,19 +17,3 @@ import { Navbar } from './layout/navbar/navbar';
 export class App {
   protected readonly title = signal('importadora-web');
 }
-
-/* 
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-
-@Component({
-  selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
-})
-export class App {
-  protected readonly title = signal('importadora-web');
-}
-
-*/

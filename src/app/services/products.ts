@@ -1,10 +1,40 @@
 import { Injectable } from '@angular/core';
 import { Product } from '../models/product.model';
+import { SupabaseService } from '../core/services/supabase.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Products {
+
+  private allProducts: Product[] = [];
+
+  constructor(private supabase: SupabaseService) {}
+
+  async getProducts(): Promise<Product[]> {
+  const { data, error } = await this.supabase.client
+    .from('products')
+    .select('*')
+    .eq('is_active', true);
+
+  if (error) {
+    console.error(error);
+    throw error;
+  }
+
+  this.allProducts = data as Product[];
+  return this.allProducts;
+}
+
+  getCategories(): string[] {
+    return [...new Set(this.allProducts.map(p => p.category))];
+  }
+
+  getProductsByCategory(category: string): Product[] {
+    return this.allProducts.filter(p => p.category === category);
+  }
+}
+/*export class Products {
   private products: Product[] = [
     {
       id: '1',
@@ -52,4 +82,4 @@ export class Products {
     return this.getProducts().filter(p => p.category === category);
   }
   
-}
+}*/ 

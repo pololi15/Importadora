@@ -47,3 +47,9 @@
     </div>
   </div>
 </div>
+
+<div *ngIf="loading">Cargando...</div>
+
+<div *ngIf="!loading">
+  <pre>{{ products | json }}</pre>
+</div>
