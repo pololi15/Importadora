@@ -1,13 +1,39 @@
-<nav class="bg-white border-b shadow-sm">
-  <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-    <a routerLink="/" class="text-xl font-bold text-gray-800">
+<header class="border-b bg-white sticky top-0 z-50">
+  <nav class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+
+    <!-- Logo -->
+    <a routerLink="/" class="text-xl font-bold text-gray-900">
       Importadora
     </a>
 
-    <div class="flex gap-6 text-gray-700">
-      <a routerLink="/" class="hover:text-blue-600">Inicio</a>
-      <a routerLink="/nosotros" class="hover:text-blue-600">Nosotros</a>
-      <a routerLink="/productos" class="hover:text-blue-600">Productos</a>
+    <!-- Desktop Menu -->
+    <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+      <a routerLink="/" class="hover:text-black text-gray-600">Inicio</a>
+      <a routerLink="/nosotros" class="hover:text-black text-gray-600">Nosotros</a>
+      <a routerLink="/productos" class="hover:text-black text-gray-600">Productos</a>
+
+      <a
+        href="#contacto"
+        class="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition"
+      >
+        Contacto
+      </a>
     </div>
+
+    <!-- Mobile Button -->
+    <button
+      class="md:hidden text-gray-700"
+      (click)="toggleMenu()"
+    >
+      ☰
+    </button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div *ngIf="mobileOpen" class="md:hidden border-t bg-white px-4 py-4 space-y-3">
+    <a routerLink="/" class="block text-gray-700">Inicio</a>
+    <a routerLink="/nosotros" class="block text-gray-700">Nosotros</a>
+    <a routerLink="/productos" class="block text-gray-700">Productos</a>
+    <a href="#contacto" class="block font-semibold">Contacto</a>
   </div>
-</nav>
+</header>

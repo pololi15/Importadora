@@ -3,7 +3,7 @@ import { Product } from '../models/product.model';
 import { SupabaseService } from '../core/services/supabase.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class Products {
 
@@ -12,19 +12,20 @@ export class Products {
   constructor(private supabase: SupabaseService) {}
 
   async getProducts(): Promise<Product[]> {
-  const { data, error } = await this.supabase.client
-    .from('products')
-    .select('*')
-    .eq('is_active', true);
+    const { data, error } = await this.supabase.client
+      .from('products')
+      .select('*')
+      .eq('is_active', true)
+      .order('created_at', { ascending: false });
 
-  if (error) {
-    console.error(error);
-    throw error;
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
+
+    this.allProducts = data as Product[];
+    return this.allProducts;
   }
-
-  this.allProducts = data as Product[];
-  return this.allProducts;
-}
 
   getCategories(): string[] {
     return [...new Set(this.allProducts.map(p => p.category))];
@@ -34,6 +35,7 @@ export class Products {
     return this.allProducts.filter(p => p.category === category);
   }
 }
+
 /*export class Products {
   private products: Product[] = [
     {

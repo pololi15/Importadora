@@ -1,55 +1,77 @@
-<h1 class="text-3xl font-bold mb-6">Productos</h1>
+<section class="max-w-7xl mx-auto px-4 py-10">
+  
+  <!-- Título -->
+  <h1 class="text-3xl font-bold text-gray-900 mb-6">
+    Productos
+  </h1>
 
-<!-- Categorías -->
-<div class="flex gap-3 mb-6 flex-wrap">
-  <button
-    (click)="filterByCategory(null)"
-    class="px-4 py-2 rounded border"
-    [class.bg-blue-600]="!selectedCategory"
-    [class.text-white]="!selectedCategory"
-  >
-    Todos
-  </button>
+  <!-- Categorías -->
+  <div class="flex flex-wrap gap-3 mb-8">
+    <button
+      (click)="filterByCategory(null)"
+      class="px-4 py-2 rounded-full border text-sm transition"
+      [class.bg-black]="!selectedCategory"
+      [class.text-white]="!selectedCategory"
+    >
+      Todos
+    </button>
 
-  <button
-    *ngFor="let category of categories"
-    (click)="filterByCategory(category)"
-    class="px-4 py-2 rounded border"
-    [class.bg-blue-600]="selectedCategory === category"
-    [class.text-white]="selectedCategory === category"
-  >
-    {{ category }}
-  </button>
-</div>
-
-<!-- Productos -->
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-  <div
-    *ngFor="let product of products"
-    class="border rounded-lg shadow-sm p-4 flex flex-col"
-  >
-    <img
-      [src]="product.imageUrl"
-      class="w-full h-48 object-cover rounded mb-4"
-    />
-
-    <h2 class="font-semibold text-lg">{{ product.name }}</h2>
-    <p class="text-gray-600 text-sm mb-2">{{ product.description }}</p>
-
-    <div class="mt-auto">
-      <p class="text-xl font-bold">Bs {{ product.price }}</p>
-      <p class="text-sm text-green-600" *ngIf="product.stock > 0">
-        Stock disponible
-      </p>
-      <p class="text-sm text-red-600" *ngIf="product.stock === 0">
-        Sin stock
-      </p>
-    </div>
+    <button
+      *ngFor="let category of categories"
+      (click)="filterByCategory(category)"
+      class="px-4 py-2 rounded-full border text-sm capitalize transition"
+      [class.bg-black]="selectedCategory === category"
+      [class.text-white]="selectedCategory === category"
+    >
+      {{ category }}
+    </button>
   </div>
-</div>
 
-<div *ngIf="loading">Cargando...</div>
+  <!-- Loader -->
+  <div *ngIf="loading" class="text-gray-500">
+    Cargando productos...
+  </div>
 
-<div *ngIf="!loading">
-  <pre>{{ products | json }}</pre>
-</div>
+  <!-- Grid -->
+  <div
+    *ngIf="!loading"
+    class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+  >
+    <ng-container *ngFor="let product of products">
+      <div class="bg-white border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition">
+        <!-- Imagen -->
+        <img
+          [src]="product.image_Url"
+          alt="{{ product.name }}"
+          class="w-full h-48 object-cover"
+        />
+
+        <!-- Contenido -->
+        <div class="p-5 space-y-3">
+          <h2 class="text-lg font-semibold text-gray-900">
+            {{ product.name }}
+          </h2>
+
+          <p class="text-sm text-gray-600 line-clamp-2">
+            {{ product.description }}
+          </p>
+
+          <!-- Precio -->
+          <div class="text-xl font-bold text-gray-900">
+            Bs {{ product.price }}
+          </div>
+
+          <!-- Stock -->
+          <div
+            class="text-sm font-medium"
+            [class.text-green-600]="product.stock > 0"
+            [class.text-red-600]="product.stock === 0"
+          >
+            {{ product.stock > 0 ? 'Stock disponible' : 'Agotado' }}
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+</section>
