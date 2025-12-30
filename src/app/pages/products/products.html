@@ -1,15 +1,12 @@
-<section class="max-w-7xl mx-auto px-4 py-10">
-  
+<section class="max-w-7xl mx-auto px-4 py-12">
   <!-- Título -->
-  <h1 class="text-3xl font-bold text-gray-900 mb-6">
-    Productos
-  </h1>
+  <h1 class="text-3xl font-bold text-gray-800 mb-8">Nuestros Productos</h1>
 
   <!-- Categorías -->
-  <div class="flex flex-wrap gap-3 mb-8">
+  <div class="flex flex-wrap gap-3 mb-10">
     <button
       (click)="filterByCategory(null)"
-      class="px-4 py-2 rounded-full border text-sm transition"
+      class="px-4 py-2 rounded-full text-sm font-medium border"
       [class.bg-black]="!selectedCategory"
       [class.text-white]="!selectedCategory"
     >
@@ -19,7 +16,7 @@
     <button
       *ngFor="let category of categories"
       (click)="filterByCategory(category)"
-      class="px-4 py-2 rounded-full border text-sm capitalize transition"
+      class="px-4 py-2 rounded-full text-sm font-medium border capitalize"
       [class.bg-black]="selectedCategory === category"
       [class.text-white]="selectedCategory === category"
     >
@@ -27,51 +24,64 @@
     </button>
   </div>
 
-  <!-- Loader -->
-  <div *ngIf="loading" class="text-gray-500">
+  <!-- LOADING -->
+  <div *ngIf="loading" class="text-center py-10 text-gray-500">
     Cargando productos...
   </div>
 
-  <!-- Grid -->
-  <div
-    *ngIf="!loading"
-    class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-  >
-    <ng-container *ngFor="let product of products">
-      <div class="bg-white border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition">
-        <!-- Imagen -->
-        <img
-          [src]="product.image_Url"
-          alt="{{ product.name }}"
-          class="w-full h-48 object-cover"
-        />
+  <!-- PRODUCTS -->
+  <div *ngIf="!loading && products.length > 0"
+       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+    <div *ngFor="let product of products"
+         class="bg-white rounded-xl shadow hover:shadow-xl transition overflow-hidden">
 
-        <!-- Contenido -->
-        <div class="p-5 space-y-3">
-          <h2 class="text-lg font-semibold text-gray-900">
-            {{ product.name }}
-          </h2>
+      <!-- Imagen -->
+      <img
+        [src]="product.image_url || '/assets/placeholder.png'"
+        alt="{{ product.name }}"
+        class="w-full h-48 object-cover rounded mb-4"
+      />
 
-          <p class="text-sm text-gray-600 line-clamp-2">
-            {{ product.description }}
-          </p>
+      <!-- Info -->
+      <div class="p-5 flex flex-col h-full">
+        <h3 class="text-lg font-semibold text-gray-800 mb-1">
+          {{ product.name }}
+        </h3>
 
-          <!-- Precio -->
-          <div class="text-xl font-bold text-gray-900">
-            Bs {{ product.price }}
+        <p class="text-sm text-gray-500 mb-4">
+          {{ product.description }}
+        </p>
+
+        <div class="mt-auto">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xl font-bold text-green-600">
+              Bs {{ product.price_b2c }}
+            </span>
+
+            <span
+              class="text-xs px-2 py-1 rounded-full"
+              [class.bg-green-100]="product.stock > 0"
+              [class.text-green-700]="product.stock > 0"
+              [class.bg-red-100]="product.stock === 0"
+              [class.text-red-700]="product.stock === 0"
+            >
+              {{ product.stock > 0 ? 'Disponible' : 'Agotado' }}
+            </span>
           </div>
 
-          <!-- Stock -->
-          <div
-            class="text-sm font-medium"
-            [class.text-green-600]="product.stock > 0"
-            [class.text-red-600]="product.stock === 0"
+          <button
+            class="w-full bg-black text-white py-2 rounded-lg text-sm hover:bg-gray-800 transition"
           >
-            {{ product.stock > 0 ? 'Stock disponible' : 'Agotado' }}
-          </div>
+            Consultar por WhatsApp
+          </button>
         </div>
       </div>
-    </ng-container>
+    </div>
   </div>
 
+  <!-- EMPTY -->
+  <div *ngIf="!loading && products.length === 0"
+       class="text-center py-10 text-gray-500">
+    No hay productos disponibles
+  </div>
 </section>

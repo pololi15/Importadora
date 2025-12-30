@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../../models/product.model';
 import { Products as ProductsService } from '../../services/products';
 
 @Component({
   selector: 'app-products',
-  standalone: true,              // 👈 standalone moderno
-  imports: [CommonModule],       // 👈 importa directivas comunes (*ngIf, *ngFor)
+  standalone: true,              
+  imports: [CommonModule],       // importa directivas comunes (*ngIf, *ngFor)
   templateUrl: './products.html',
 })
 export class ProductsComponent implements OnInit {
@@ -15,59 +15,41 @@ export class ProductsComponent implements OnInit {
   selectedCategory: string | null = null;
   loading = true;
 
-  constructor(private productsService: ProductsService) {}
+  constructor(
+    private productsService: ProductsService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  async ngOnInit() {
+  //Método único para cargar productos
+  async loadProducts(category?: string) {
+    this.loading = true;
+    this.cdr.detectChanges();
+
     try {
-      // 👇 si getProducts devuelve Promise
-      this.products = await this.productsService.getProducts();
-      this.categories = await this.productsService.getCategories();
+      this.products = category
+        ? await this.productsService.getProductsByCategory(category)
+        : await this.productsService.getProducts();
     } catch (error) {
       console.error(error);
     } finally {
       this.loading = false;
+      this.cdr.detectChanges();
     }
   }
 
-  filterByCategory(category: string | null) {
-  this.selectedCategory = category;
-
-  if (category) {
-    this.products = this.productsService.getProductsByCategory(category);
-  } else {
-    this.products = [...this.productsService['allProducts']];
-  }
-}
-
-}
-/*import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Product } from '../../models/product.model';
-import { Products as ProductsService } from '../../services/products';
-
-@Component({
-  selector: 'app-products',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './products.html',
-})
-export class Products {
-
-  products: Product[] = [];
-  categories: string[] = [];
-  selectedCategory: string | null = null; 
-
-  constructor(private productsService: ProductsService) {
-    this.products = this.productsService.getProducts();
-    this.categories = this.productsService.getCategories();
+  //Inicialización Limpia 
+  async ngOnInit() {
+    try {
+      this.categories = await this.productsService.getCategories();
+      await this.loadProducts(); // carga inicial sin categoría
+    } catch (error) {
+      console.error(error);
+    }
   }
 
+  //  Filtro 
   filterByCategory(category: string | null) {
     this.selectedCategory = category;
-
-    this.products = category
-      ? this.productsService.getProductsByCategory(category)
-      : this.productsService.getProducts();
+    this.loadProducts(category || undefined);
   }
 }
-*/

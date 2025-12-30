@@ -1,87 +1,53 @@
 import { Injectable } from '@angular/core';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Product } from '../models/product.model';
-import { SupabaseService } from '../core/services/supabase.service';
+import { environment } from '../../environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class Products {
+  private supabase: SupabaseClient;
 
-  private allProducts: Product[] = [];
-
-  constructor(private supabase: SupabaseService) {}
+  constructor() {
+    this.supabase = createClient(
+      environment.supabaseUrl,
+      environment.supabaseAnonKey
+    );
+  }
 
   async getProducts(): Promise<Product[]> {
-    const { data, error } = await this.supabase.client
+  
+    const { data, error } = await this.supabase
       .from('products')
       .select('*')
       .eq('is_active', true)
       .order('created_at', { ascending: false });
+  console.log('products data:', data);
+    if (error) throw error;
+    
+    console.log('products error:', error);
+    return data as Product[];
 
-    if (error) {
-      console.error('Supabase error:', error);
-      throw error;
-    }
-
-    this.allProducts = data as Product[];
-    return this.allProducts;
   }
 
-  getCategories(): string[] {
-    return [...new Set(this.allProducts.map(p => p.category))];
+  async getCategories(): Promise<string[]> {
+    const { data, error } = await this.supabase
+      .from('products')
+      .select('category')
+      .eq('is_active', true);
+
+    if (error) throw error;
+
+    return [...new Set(data.map(p => p.category))];
   }
 
-  getProductsByCategory(category: string): Product[] {
-    return this.allProducts.filter(p => p.category === category);
+  async getProductsByCategory(category: string): Promise<Product[]> {
+    const { data, error } = await this.supabase
+      .from('products')
+      .select('*')
+      .eq('category', category)
+      .eq('is_active', true);
+
+    if (error) throw error;
+    return data as Product[];
   }
 }
-
-/*export class Products {
-  private products: Product[] = [
-    {
-      id: '1',
-      name: 'Audífonos In Ear Pro',
-      description: 'Audífonos originales con micrófono y cancelación básica.',
-      price: 120,
-      stock: 15,
-      imageUrl: 'https://via.placeholder.com/300',
-      category: 'audio',
-      isActive: true,
-    },
-    {
-      id: '2',
-      name: 'Cargador USB-C 65W',
-      description: 'Carga rápida, compatible con múltiples dispositivos.',
-      price: 180,
-      stock: 8,
-      imageUrl: 'https://via.placeholder.com/300',
-      category: 'cargadores',
-      isActive: true,
-    },
-    {
-      id: '3',
-      name: 'Cable USB-C',
-      description: 'Cable reforzado de 1 metro.',
-      price: 45,
-      stock: 30,
-      imageUrl: 'https://via.placeholder.com/300',
-      category: 'Cables',
-      isActive: true,
-    },
-  ];
-
-  //El metodo devuelve productos que cumplan, que esten activos
-  getProducts(): Product[] {
-    return this.products.filter(p => p.isActive);
-  }
-  //El metodo devuelve las categorias de los productos sin repetir
-    //Usamos Set para eliminar duplicados y map para extraer las categorias
-  getCategories(): string[] {
-    return [...new Set(this.products.map(p => p.category))];
-  }
-  //El metodo devuelve los productos por categoria
-  getProductsByCategory(category: string): Product[] {
-    return this.getProducts().filter(p => p.category === category);
-  }
-  
-}*/ 

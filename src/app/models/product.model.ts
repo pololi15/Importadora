@@ -2,10 +2,11 @@ export interface Product {
   id: number;
   name: string;
   description: string;
-  price: number;
-  image_Url: string;
   category: string;
+  price_b2c: number;
+  price_b2b?: number;
   stock: number;
+  image_url?: string;
   is_active: boolean;
-  created_at: string;
+  sku?: string;
 }
