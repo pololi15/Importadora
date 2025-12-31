@@ -50,4 +50,13 @@ export class Products {
     if (error) throw error;
     return data as Product[];
   }
+  async getProductById(id: number): Promise<Product> {
+    const { data, error } = await this.supabase
+    .from('products')
+    .select('*')
+    .eq('id', id)
+    .single();
+    if (error) throw error;
+    return data as Product;
+  }
 }

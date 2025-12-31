@@ -11,7 +11,7 @@
       [class.text-white]="!selectedCategory"
     >
       Todos
-    </button>
+    </button> 
 
     <button
       *ngFor="let category of categories"
@@ -33,7 +33,8 @@
   <div *ngIf="!loading && products.length > 0"
        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
     <div *ngFor="let product of products"
-         class="bg-white rounded-xl shadow hover:shadow-xl transition overflow-hidden">
+    class="bg-white rounded-xl shadow hover:shadow-xl transition overflow-hidden cursor-pointer"
+    (click)="goToDetail(product.id)">
 
       <!-- Imagen -->
       <img
@@ -68,6 +69,8 @@
               {{ product.stock > 0 ? 'Disponible' : 'Agotado' }}
             </span>
           </div>
+          
+          
 
           <button
             class="w-full bg-black text-white py-2 rounded-lg text-sm hover:bg-gray-800 transition"
@@ -85,3 +88,5 @@
     No hay productos disponibles
   </div>
 </section>
+
+

@@ -1,12 +1,13 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';   // 👈 Importa Router
 import { Product } from '../../models/product.model';
 import { Products as ProductsService } from '../../services/products';
 
 @Component({
   selector: 'app-products',
-  standalone: true,              
-  imports: [CommonModule],       // importa directivas comunes (*ngIf, *ngFor)
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './products.html',
 })
 export class ProductsComponent implements OnInit {
@@ -17,7 +18,8 @@ export class ProductsComponent implements OnInit {
 
   constructor(
     private productsService: ProductsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router   // 👈 Inyecta Router
   ) {}
 
   //Método único para cargar productos
@@ -37,19 +39,22 @@ export class ProductsComponent implements OnInit {
     }
   }
 
-  //Inicialización Limpia 
   async ngOnInit() {
     try {
       this.categories = await this.productsService.getCategories();
-      await this.loadProducts(); // carga inicial sin categoría
+      await this.loadProducts();
     } catch (error) {
       console.error(error);
     }
   }
 
-  //  Filtro 
   filterByCategory(category: string | null) {
     this.selectedCategory = category;
     this.loadProducts(category || undefined);
+  }
+
+  // 👇 Método de navegación
+  goToDetail(id: number) {
+    this.router.navigate(['/product', id]);
   }
 }
