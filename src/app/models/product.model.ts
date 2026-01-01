@@ -7,6 +7,14 @@ export interface Product {
   price_b2b?: number;
   stock: number;
   image_url?: string;
+  images?: string[];
   is_active: boolean;
   sku?: string;
 }
+
+
+
+
+
+
+

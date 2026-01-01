@@ -1,35 +1,59 @@
 <section *ngIf="!loading && product" class="max-w-5xl mx-auto px-4 py-10">
+  <!-- GALERÍA -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+    
+    <!-- Imagen principal -->
+    <div>
+      <img
+        [src]="'/assets/products/' + selectedImage"
+        class="w-full h-96 object-cover rounded-xl shadow"
+        loading="lazy"
+      />
 
-  <img
-    [src]="product.image_url || '/assets/placeholder.png'"
-    class="w-full h-96 object-cover rounded-xl mb-6"
-    loading="lazy"
-  />
+      <!-- Thumbnails -->
+      <div class="flex gap-3 mt-4">
+        <img
+          *ngFor="let img of images"
+          [src]="'/assets/products/' + img"
+          (click)="selectedImage = img"
+          class="w-20 h-20 object-cover rounded-lg cursor-pointer border-2 transition"
+          [class.border-black]="selectedImage === img"
+          [class.border-transparent]="selectedImage !== img"
+        />
+      </div>
+    </div>
 
-  <h1 class="text-3xl font-bold mb-4">
-    {{ product.name }}
-  </h1>
+    <!-- INFO -->
+    <div>
+      <h1 class="text-3xl font-bold mb-4">
+        {{ product.name }}
+      </h1>
 
-  <p class="text-gray-600 mb-6">
-    {{ product.description }}
-  </p>
+      <p class="text-gray-600 mb-6">
+        {{ product.description }}
+      </p>
 
-  <p class="text-2xl font-semibold text-green-600 mb-6">
-    Bs {{ product.price_b2c }}
-  </p>
+      <p class="text-2xl font-semibold text-green-600 mb-6">
+        Bs {{ product.price_b2c }}
+      </p>
 
-  <a
-  *ngIf="product"
-  [href]="whatsappLink"
-  target="_blank"
-  class="inline-block bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition"
->
-  Consultar por WhatsApp
-</a>
-
-
+      <a
+        [href]="whatsappLink"
+        target="_blank"
+        class="inline-block bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition"
+      >
+        Consultar por WhatsApp
+      </a>
+    </div>
+  </div>
 </section>
 
+<!-- LOADING -->
 <div *ngIf="loading" class="text-center py-20">
   Cargando producto...
+</div>
+
+<!-- ERROR / NO ENCONTRADO -->
+<div *ngIf="!loading && product === null" class="text-center py-20 text-gray-500">
+  Producto no encontrado
 </div>

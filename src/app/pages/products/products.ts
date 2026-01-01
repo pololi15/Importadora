@@ -19,7 +19,7 @@ export class ProductsComponent implements OnInit {
   constructor(
     private productsService: ProductsService,
     private cdr: ChangeDetectorRef,
-    private router: Router   // 👈 Inyecta Router
+    private router: Router   //Inyecta Router
   ) {}
 
   //Método único para cargar productos
@@ -53,8 +53,15 @@ export class ProductsComponent implements OnInit {
     this.loadProducts(category || undefined);
   }
 
-  // 👇 Método de navegación
+  //  Método de navegación
   goToDetail(id: number) {
     this.router.navigate(['/product', id]);
   }
+  onImageError(event: Event) {
+  const img = event.target as HTMLImageElement;
+  img.src = '/assets/placeholder.png';
 }
+
+
+}
+

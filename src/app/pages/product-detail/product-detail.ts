@@ -15,15 +15,52 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./product-detail.css'], 
 })
 export class ProductDetailComponent implements OnInit {
-  product!: Product;
+  product: Product | null = null;
+
   loading = true;
+
+  images: string[] = [];
+  selectedImage = '';
+
 
   constructor(
     private route: ActivatedRoute,
     private productsService: Products,
     private cdr: ChangeDetectorRef
   ) {}
+async ngOnInit() {
+  const id = Number(this.route.snapshot.paramMap.get('id'));
 
+  this.loading = true;
+
+  try {
+    const data = await this.productsService.getProductById(id);
+
+    if (!data) {
+      throw new Error('Producto no encontrado');
+    }
+
+    this.product = data;
+
+    this.images = this.product.images?.length
+      ? this.product.images
+      : [
+          `${this.product.id}-1.jpg`,
+          `${this.product.id}-2.jpg`,
+          `${this.product.id}-3.jpg`,
+        ];
+
+    this.selectedImage = this.images[0];
+  } catch (error) {
+    console.error('Error cargando producto:', error);
+    this.product = null;
+  } finally {
+    this.loading = false;
+  }
+}
+
+
+  /*
   async ngOnInit() {
   const id = Number(this.route.snapshot.paramMap.get('id'));
 
@@ -39,6 +76,11 @@ export class ProductDetailComponent implements OnInit {
     this.cdr.detectChanges(); 
     }
   }
+*/
+
+  
+
+
   get whatsappLink(): string {
   if (!this.product) return '';
 

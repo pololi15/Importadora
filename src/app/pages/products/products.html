@@ -33,15 +33,20 @@
   <div *ngIf="!loading && products.length > 0"
        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
     <div *ngFor="let product of products"
-    class="bg-white rounded-xl shadow hover:shadow-xl transition overflow-hidden cursor-pointer"
-    (click)="goToDetail(product.id)">
+         class="bg-white rounded-xl shadow hover:shadow-xl transition overflow-hidden cursor-pointer"
+         (click)="goToDetail(product.id)">
 
       <!-- Imagen -->
       <img
-        [src]="product.image_url || '/assets/placeholder.png'"
-        alt="{{ product.name }}"
-        class="w-full h-48 object-cover rounded mb-4"
+      [src]="product.image_url 
+      ? '/assets/products/' + product.image_url 
+      : '/assets/placeholder.png'"
+      (error)="onImageError($event)"
+      alt="{{ product.name }}"
+      class="w-full h-48 object-cover rounded mb-4"
       />
+
+
 
       <!-- Info -->
       <div class="p-5 flex flex-col h-full">
@@ -69,8 +74,6 @@
               {{ product.stock > 0 ? 'Disponible' : 'Agotado' }}
             </span>
           </div>
-          
-          
 
           <button
             class="w-full bg-black text-white py-2 rounded-lg text-sm hover:bg-gray-800 transition"
@@ -88,5 +91,3 @@
     No hay productos disponibles
   </div>
 </section>
-
-
