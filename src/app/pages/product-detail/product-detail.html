@@ -6,6 +6,7 @@
     <div>
       <img
         [src]="'/assets/products/' + selectedImage"
+        (error)="selectedImage = 'placeholder.png'"
         class="w-full h-96 object-cover rounded-xl shadow"
         loading="lazy"
       />
@@ -16,6 +17,7 @@
           *ngFor="let img of images"
           [src]="'/assets/products/' + img"
           (click)="selectedImage = img"
+          (error)="$event.target.src = '/assets/products/placeholder.png'"
           class="w-20 h-20 object-cover rounded-lg cursor-pointer border-2 transition"
           [class.border-black]="selectedImage === img"
           [class.border-transparent]="selectedImage !== img"
@@ -57,3 +59,5 @@
 <div *ngIf="!loading && product === null" class="text-center py-20 text-gray-500">
   Producto no encontrado
 </div>
+
+
