@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';   // 👈 Importa Router
+import { Router } from '@angular/router';   
 import { Product } from '../../models/product.model';
 import { Products as ProductsService } from '../../services/products';
 

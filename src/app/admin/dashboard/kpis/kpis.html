@@ -1,0 +1,49 @@
+<!-- KPIs -->
+<div *ngIf="!loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+  <div class="bg-white rounded-xl shadow p-5 border-l-4 border-yellow-500">
+    <p class="text-sm text-gray-500">Margen bajo</p>
+    <p class="text-3xl font-bold text-yellow-600">
+      {{ summary.low_margin }}
+    </p>
+    <p class="text-xs text-gray-400 mt-1">
+      Productos con margen &lt; 15%
+    </p>
+  </div>
+
+  <div class="bg-white rounded-xl shadow p-5 border-l-4 border-red-500">
+    <p class="text-sm text-gray-500">Stock antiguo</p>
+    <p class="text-3xl font-bold text-red-600">
+      {{ summary.old_stock }}
+    </p>
+    <p class="text-xs text-gray-400 mt-1">
+      Más de 90 días en bodega
+    </p>
+  </div>
+
+  <div class="bg-white rounded-xl shadow p-5 border-l-4 border-orange-500">
+    <p class="text-sm text-gray-500">Stock bajo</p>
+    <p class="text-3xl font-bold text-orange-600">
+      {{ summary.low_stock }}
+    </p>
+    <p class="text-xs text-gray-400 mt-1">
+      Menos de 10 unidades
+    </p>
+  </div>
+
+  <div class="bg-white rounded-xl shadow p-5 border-l-4 border-blue-500">
+    <p class="text-sm text-gray-500">Malas ventas</p>
+    <p class="text-3xl font-bold text-blue-600">
+      {{ summary.bad_sales }}
+    </p>
+    <p class="text-xs text-gray-400 mt-1">
+      Baja rotación reciente
+    </p>
+  </div>
+
+</div>
+
+<!-- Loader -->
+<div *ngIf="loading" class="text-center py-10 text-gray-500">
+  Cargando métricas...
+</div>

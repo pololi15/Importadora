@@ -11,11 +11,12 @@ export interface Product {
   sku?: string;
 }
 
- 
- 
- 
- 
- 
+export interface AlertSummary {
+  low_margin: number;
+  old_stock: number;
+  low_stock: number;
+  bad_sales: number;
+}
  
  
 
