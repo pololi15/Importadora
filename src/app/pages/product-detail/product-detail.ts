@@ -1,9 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Products } from '../../services/products';
 import { Product } from '../../models/product.model';
 import { environment } from '../../../environments/environment';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-product-detail',
@@ -15,9 +16,8 @@ import { environment } from '../../../environments/environment';
 export class ProductDetailComponent implements OnInit {
   product: Product | null = null;
   loading = true;
-
   images: string[] = [];
-  selectedImage = 'placeholder.png'; // valor inicial seguro
+  selectedImage = '/assets/products/placeholder.png';
 
   constructor(
     private route: ActivatedRoute,
@@ -26,45 +26,48 @@ export class ProductDetailComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.loading = true;
+  console.log('Iniciando carga...'); // Control
+  this.loading = true;
 
-    try {
-      const data = await this.productsService.getProductById(id);
+  try {
+    const idParam = this.route.snapshot.paramMap.get('id');
+    const id = Number(idParam);
+    console.log('ID a buscar:', id);
 
-      if (!data) {
-        throw new Error('Producto no encontrado');
-      }
+    const [product, images] = await Promise.all([
+      this.productsService.getProductById(id),
+      this.productsService.getProductImages(id)
+    ]);
 
-      this.product = data;
+    console.log('Datos recibidos:', { product, images });
 
-      // Generar imágenes por ID
-      this.images = [
-        `${this.product.id}-1.jpg`,
-        `${this.product.id}-2.jpg`,
-        `${this.product.id}-3.jpg`,
-      ];
+    this.product = product;
+    this.images = images;
 
-      // Protección obligatoria: si no hay imágenes, usar placeholder
-      this.selectedImage = this.images.length
-        ? this.images[0]
-        : 'placeholder.png';
-    } catch (error) {
-      console.error('Error cargando producto:', error);
-      this.product = null;
-    } finally {
-      this.loading = false;
-      this.cdr.detectChanges();
+    if (this.images.length === 0 && this.product?.image_url) {
+      this.images = [this.product.image_url];
     }
+
+    this.selectedImage = this.images.length > 0 
+      ? this.images[0] 
+      : '/assets/products/placeholder.png';
+
+  } catch (error) {
+    console.error('❌ Error capturado:', error);
+  } finally {
+    this.loading = false;
+    console.log('Carga finalizada, loading = false');
+    this.cdr.detectChanges(); // 3. Fuerza a Angular a revisar la pantalla
+  }
+}
+
+  onImageError(event: Event) {
+    (event.target as HTMLImageElement).src = '/assets/products/placeholder.png';
   }
 
   get whatsappLink(): string {
     if (!this.product) return '';
-
     const message = `Hola, estoy interesado en el producto "${this.product.name}" que cuesta Bs ${this.product.price_b2c}. ¿Me podrías dar más información?`;
-
-    return `https://wa.me/${environment.whatsappNumber}?text=${encodeURIComponent(
-      message
-    )}`;
+    return `https://wa.me/${environment.whatsappNumber}?text=${encodeURIComponent(message)}`;
   }
 }

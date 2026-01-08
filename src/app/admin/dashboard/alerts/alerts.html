@@ -1,1 +1,92 @@
-<p>alerts works!</p>
+<section class="mt-10">
+
+  <h2 class="text-2xl font-bold mb-6">Alertas del sistema</h2>
+
+  <!-- Loader -->
+  <div *ngIf="loading" class="text-gray-500 text-center py-10">
+    Cargando alertas...
+  </div>
+
+  <!-- ALERTAS -->
+  <div *ngIf="!loading" class="space-y-10">
+
+    <!-- Margen bajo -->
+    <div *ngIf="lowMargin.length">
+      <h3 class="font-semibold text-red-600 mb-3">🔴 Margen bajo</h3>
+      <table class="w-full text-sm border">
+        <tr class="bg-gray-100">
+          <th class="p-2 text-left">Producto</th>
+          <th class="p-2">Margen %</th>
+        </tr>
+        <tr *ngFor="let p of lowMargin">
+          <td class="p-2">{{ p.name }}</td>
+          <td class="p-2 text-red-600 font-bold">
+            {{ p.profit_margin_percent }}%
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Stock antiguo -->
+    <div *ngIf="oldStock.length">
+      <h3 class="font-semibold text-orange-600 mb-3">⏳ Stock antiguo</h3>
+      <table class="w-full text-sm border">
+        <tr class="bg-gray-100">
+          <th class="p-2 text-left">Producto</th>
+          <th class="p-2">Días en stock</th>
+        </tr>
+        <tr *ngFor="let p of oldStock">
+          <td class="p-2">{{ p.name }}</td>
+          <td class="p-2 text-orange-600 font-bold">
+            {{ p.days_in_stock }}
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Stock bajo -->
+    <div *ngIf="lowStock.length">
+      <h3 class="font-semibold text-yellow-600 mb-3">📦 Stock bajo</h3>
+      <table class="w-full text-sm border">
+        <tr class="bg-gray-100">
+          <th class="p-2 text-left">Producto</th>
+          <th class="p-2">Unidades</th>
+        </tr>
+        <tr *ngFor="let p of lowStock">
+          <td class="p-2">{{ p.name }}</td>
+          <td class="p-2 text-yellow-600 font-bold">
+            {{ p.total_stock }}
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Malas ventas -->
+    <div *ngIf="badSales.length">
+      <h3 class="font-semibold text-blue-600 mb-3">📉 Malas ventas</h3>
+      <table class="w-full text-sm border">
+        <tr class="bg-gray-100">
+          <th class="p-2 text-left">Producto</th>
+          <th class="p-2">Ventas recientes</th>
+        </tr>
+        <tr *ngFor="let p of badSales">
+          <td class="p-2">{{ p.name }}</td>
+          <td class="p-2 text-blue-600 font-bold">
+            {{ p.total_sales }}
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Todo bien -->
+    <div *ngIf="
+      !lowMargin.length &&
+      !oldStock.length &&
+      !lowStock.length &&
+      !badSales.length
+    " class="text-center text-green-600 py-10">
+      ✅ No hay alertas críticas
+    </div>
+
+  </div>
+</section>

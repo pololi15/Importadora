@@ -1,63 +1,59 @@
 <section *ngIf="!loading && product" class="max-w-5xl mx-auto px-4 py-10">
-  <!-- GALERÍA -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
     
-    <!-- Imagen principal -->
     <div>
-      <img
-        [src]="'/assets/products/' + selectedImage"
-        (error)="selectedImage = 'placeholder.png'"
-        class="w-full h-96 object-cover rounded-xl shadow"
-        loading="lazy"
-      />
+      <div class="w-full h-96 bg-gray-50 rounded-xl overflow-hidden shadow-md flex items-center justify-center">
+        <img
+          [src]="selectedImage"
+          (error)="onImageError($event)"
+          class="max-w-full max-h-full object-contain transition-opacity duration-300"
+          loading="lazy"
+        />
+      </div>
 
-      <!-- Thumbnails -->
-      <div class="flex gap-3 mt-4">
+      <div class="flex gap-3 mt-4 overflow-x-auto pb-2">
         <img
           *ngFor="let img of images"
-          [src]="'/assets/products/' + img"
+          [src]="img"
           (click)="selectedImage = img"
-          (error)="$event.target.src = '/assets/products/placeholder.png'"
-          class="w-20 h-20 object-cover rounded-lg cursor-pointer border-2 transition"
+          (error)="onImageError($event)"
+          class="w-20 h-20 object-cover rounded-lg cursor-pointer border-2 transition-all"
           [class.border-black]="selectedImage === img"
           [class.border-transparent]="selectedImage !== img"
         />
       </div>
     </div>
 
-    <!-- INFO -->
-    <div>
-      <h1 class="text-3xl font-bold mb-4">
-        {{ product.name }}
-      </h1>
-
-      <p class="text-gray-600 mb-6">
+    <div class="flex flex-col justify-center">
+      <h1 class="text-3xl font-bold mb-4 text-gray-900">{{ product.name }}</h1>
+      
+      <p class="text-gray-600 mb-6 leading-relaxed">
         {{ product.description }}
       </p>
 
-      <p class="text-2xl font-semibold text-green-600 mb-6">
-        Bs {{ product.price_b2c }}
-      </p>
+      <div class="mb-8">
+        <span class="text-sm text-gray-400 uppercase tracking-widest">Precio</span>
+        <p class="text-3xl font-bold text-green-600">Bs {{ product.price_b2c }}</p>
+      </div>
 
       <a
         [href]="whatsappLink"
         target="_blank"
-        class="inline-block bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition"
+        class="flex items-center justify-center gap-3 bg-green-500 text-white px-8 py-4 rounded-xl font-bold hover:bg-green-600 transition-transform active:scale-95 shadow-lg shadow-green-100"
       >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.588-5.946 0-6.556 5.332-11.888 11.888-11.888 3.176 0 6.161 1.237 8.404 3.48s3.481 5.229 3.481 8.404c0 6.556-5.332 11.888-11.888 11.888-2.003 0-3.971-.505-5.711-1.467l-6.273 1.7zm11.831-2.031c1.804 0 3.585-.482 5.132-1.393l.368-.218c1.554.921 3.461 1.341 5.286.84l-1.353-4.945.241-.383c.995-1.582 1.52-3.418 1.52-5.309 0-5.467-4.448-9.915-9.915-9.915-5.467 0-9.915 4.448-9.915 9.915 0 1.954.576 3.861 1.666 5.513l.258.391-1.433 5.232 5.344-1.428.393.233c1.517.896 3.251 1.368 5.016 1.368zm4.843-6.666c-.265-.133-1.565-.772-1.808-.859-.242-.088-.419-.133-.596.133s-.684.859-.838 1.036-.309.199-.574.066c-.265-.133-1.12-.413-2.132-1.315-.788-.703-1.319-1.571-1.473-1.836-.154-.265-.016-.409.117-.541.12-.119.265-.309.398-.464s.177-.265.265-.442c.088-.177.044-.331-.022-.464s-.596-1.437-.816-1.967c-.215-.518-.432-.446-.596-.454-.154-.007-.331-.009-.508-.009s-.464.066-.706.331c-.242.265-.927.906-.927 2.209s.949 2.563 1.082 2.74c.133.177 1.867 2.851 4.524 3.998.632.273 1.125.435 1.51.557.635.202 1.213.174 1.669.106.508-.077 1.565-.64 1.786-1.258.221-.618.221-1.148.154-1.258-.066-.109-.242-.176-.507-.309z"/></svg>
         Consultar por WhatsApp
       </a>
     </div>
   </div>
 </section>
 
-<!-- LOADING -->
-<div *ngIf="loading" class="text-center py-20">
-  Cargando producto...
+<div *ngIf="loading" class="flex flex-col items-center justify-center py-40">
+  <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-black mb-4"></div>
+  <p class="text-gray-400">Cargando producto...</p>
 </div>
 
-<!-- ERROR / NO ENCONTRADO -->
-<div *ngIf="!loading && product === null" class="text-center py-20 text-gray-500">
-  Producto no encontrado
+<div *ngIf="!loading && !product" class="text-center py-40">
+  <p class="text-gray-500 mb-4 text-xl">Producto no encontrado</p>
+  <a routerLink="/productos" class="text-blue-600 hover:underline">Volver al catálogo</a>
 </div>
-
-

@@ -19,10 +19,18 @@ export class ProductsComponent implements OnInit {
   constructor(
     private productsService: ProductsService,
     private cdr: ChangeDetectorRef,
-    private router: Router   //Inyecta Router
+    private router: Router
   ) {}
 
-  //Método único para cargar productos
+  async ngOnInit() {
+    try {
+      this.categories = await this.productsService.getCategories();
+      await this.loadProducts();
+    } catch (error) {
+      console.error('Error al inicializar:', error);
+    }
+  }
+
   async loadProducts(category?: string) {
     this.loading = true;
     this.cdr.detectChanges();
@@ -32,19 +40,10 @@ export class ProductsComponent implements OnInit {
         ? await this.productsService.getProductsByCategory(category)
         : await this.productsService.getProducts();
     } catch (error) {
-      console.error(error);
+      console.error('Error al cargar productos:', error);
     } finally {
       this.loading = false;
       this.cdr.detectChanges();
-    }
-  }
-
-  async ngOnInit() {
-    try {
-      this.categories = await this.productsService.getCategories();
-      await this.loadProducts();
-    } catch (error) {
-      console.error(error);
     }
   }
 
@@ -53,15 +52,13 @@ export class ProductsComponent implements OnInit {
     this.loadProducts(category || undefined);
   }
 
-  //  Método de navegación
   goToDetail(id: number) {
     this.router.navigate(['/product', id]);
   }
+
   onImageError(event: Event) {
-  const img = event.target as HTMLImageElement;
-  img.src = '/assets/placeholder.png';
-}
-
-
+    const img = event.target as HTMLImageElement;
+    img.src = '/assets/products/placeholder.png';
+  }
 }
 

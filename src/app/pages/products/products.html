@@ -38,9 +38,7 @@
 
       <!-- Imagen -->
       <img
-      [src]="product.image_url 
-      ? '/assets/products/' + product.image_url 
-      : '/assets/placeholder.png'"
+      [src]="product.image_url || '/assets/products/placeholder.png'"
       (error)="onImageError($event)"
       alt="{{ product.name }}"
       class="w-full h-48 object-cover rounded mb-4"
